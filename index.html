@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="Kagan Ataalp" content="RW Virus Spread Model">
+    <title>RW Spread Model</title>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.4.0/dist/css/uikit.min.css" />
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.0/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.4.0/dist/js/uikit-icons.min.js"></script>
+    <!-- Plotly -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <div class="uk-container uk-container-xsmall">
+        <article class="uk-article">
+            <h1 class="uk-article-title"><a class="uk-link-reset" href="">ARW Virus Spread Model</a></h1>
+            <p class="uk-article-meta">Written by <a href="#">Kagan Ataalp</a> on 10 April 2020. </p>
+            <p class="uk-text-lead">A model based on random movements of people in a bounded region. Movement speed is a variable and a lockdown means lower movement factor. Each sick people has an infective radius. Other people inside the region get sick. A fixed duration is given for healing and along this period, the sick people face a mortality risk.</p>
+            <p>This part is the short story of the model. I got really paranoid since the beginning of the terrible coronavirus pandemic. I was always checking the web for anything new, tweets, news, blogs than I saw <a class="uk-link-muted" href="#">the great article on the virus spread by Harry Stevens from Washington Post.</a> Infectious bouncing balls! Later, I saw different blog posts from Mathworks based on the same model but the problem was that the people don't move like bouncing balls. Think of a small company, some always stay in place (the IT :) ) and some move a lot, not everybody moves and crossing with others does change your direction. We can generalize this for a whole country. Keeping these in mind, I developed another model you can see and tune below. I hope this model helps understanding of how parameters affect the total cases and pandemy duration. </p>
+            <div class="uk-card uk-card-default uk-card-body">
+                <h3 class="uk-card-title"></h3>
+                <div id="myDiv"></div>
+                <div class="uk-child-width-expand@s" uk-grid>
+                    <div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="00">Population: </label>
+                            <input class="uk-input" id="nPop" type="text" value="500" onchange="myFun()">
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="00">Initial number of sick patients:</label>
+                            <input class="uk-input" id="initSick" type="text" value="1" onchange="myFun()">
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="00">Moving speed:</label>
+                            <input class="uk-input" id="m" type="text" value="3" onchange="myFun()">
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="00">Mortality factor:</label>
+                            <input class="uk-input" id="mortRate" type="text" value="0.01" onchange="myFun()">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="00">Infectious radius:</label>
+                            <input class="uk-input" id="minDis" type="text" value="4" onchange="myFun()">
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="00">Healing period:</label>
+                            <input class="uk-input" id="sickDur" type="text" value="14" onchange="myFun()">
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="00">Simulation length:</label>
+                            <input class="uk-input" id="nSim" type="text" value="90" onchange="myFun()">
+                            <br>
+                            <br>
+                        </div>
+                        <p uk-margin>
+                            <div style="text-align: center;">
+                                <button class="uk-button uk-button-primary" onclick="myFun()">Roll</button>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <h2>Model Parameters</h2>
+            <table class="uk-table uk-table-justify uk-table-divider">
+                <thead>
+                    <tr>
+                        <th class="uk-width-small">Parameter</th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Population</td>
+                        <td>Number of units in the simulation. This unit can be considered as a single people or a batch, for example 1 unit = 1000 people. Do not increase this too much for keeping the simulation time reasonable. </td>
+                    </tr>
+                    <tr>
+                        <td>Initial number of sick patients</td>
+                        <td>Number of sick people at the very beginning of the simulation.</td>
+                    </tr>
+                    <tr>
+                        <td>Moving Speed</td>
+                        <td>Maximum speed of each unit. Every unit moves randomly at its max. speed. </td>
+                    </tr>
+                    <tr>
+                        <td>Mortality factor</td>
+                        <td>If a people get sick, it experiences this mortality probability every day during the healing period.</td>
+                    </tr>
+                    <tr>
+                        <td>Infectious radius</td>
+                        <td>People do not have to touch other units. If another people comes into the infectious radius of the sick one, get sick.</td>
+                    </tr>
+                    <tr>
+                        <td>Healing period</td>
+                        <td>People get well after the healing period and become immune to the disease.</td>
+                    </tr>
+                    <tr>
+                        <td>Simulation length</td>
+                        <td>Time duration of the simulation, can be considered as days.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>Because all processes are random, you can recalculate using the ROLL button.</p>
+
+
+            <h3>License and Future</h3>
+            <p>This is a static web page and you can get all model from the source. In the future, I am planning to create a visual model but I hate sitting with my computer.</p>
+
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Random Walk Virus Spread Model</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+        </article>
+    </div>
+    <script>
+    // Global variables
+    // Save variables for animation
+    var xSave = [];
+    var ySave = [];
+
+    function myFun() {
+
+        // Parameters
+        // Movement radius
+        var m = parseFloat(document.getElementById("m").value);
+
+        // Minimum distance between two people for infection
+        var minDis = parseFloat(document.getElementById("minDis").value);
+
+        // Mortality factor
+        var mortRate = parseFloat(document.getElementById("mortRate").value);
+
+        // Sickness period
+        var sickDur = parseFloat(document.getElementById("sickDur").value);
+
+        // Population size
+        var nPop = parseFloat(document.getElementById("nPop").value);
+
+        // Initial number of sick patients
+        var initSick = parseFloat(document.getElementById("initSick").value);
+
+        //Simulation time
+        var nSim = parseFloat(document.getElementById("nSim").value);
+
+        // Create simulation time vector
+        var simSpan = new Array(nSim);
+        for (var i = 0; i < nSim; i++) {
+            simSpan[i] = i;
+        }
+
+        // Limits of simulation window
+        var a = 0;
+        var b = 100;
+
+        // Create coordinates of initial population
+        var x = new Array(nPop);
+        var y = new Array(nPop);
+
+        for (var i = 0; i < nPop; i++) {
+            x[i] = a + (b - a) * Math.random();
+            y[i] = a + (b - a) * Math.random();
+        }
+
+        // Infected patients array
+        var ifc = new Array(nPop).fill(0);
+
+        // Mark some patients infected
+        for (var i = 0; i < initSick; i++) {
+            ifc[i] = 1;
+        }
+
+        // Sickness time for each member
+        var t = new Array(nPop).fill(0);
+
+        // Immunity situation 
+        var im = new Array(nPop).fill(0);
+
+        // Mortality (isDead)
+        var mr = new Array(nPop).fill(0);
+
+        // Initialize statistics
+        var nOfInfected = new Array(nSim).fill(0);
+        var nOfDied = new Array(nSim).fill(0);
+
+        // Define intermediate variables
+        var plusOrMinus = 0;
+
+        // Save variables for animation
+        xSave = [];
+        ySave = [];
+
+        // Main Loop
+        for (var j = 0; j < nSim; j++) {
+
+            // Start movement
+            // Move people if they are alive
+            for (var i = 0; i < nPop; i++) {
+                if (mr[i] == 0) {
+                    plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+                    x[i] = x[i] + Math.random() * m * plusOrMinus;
+
+                    plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+                    y[i] = y[i] + Math.random() * m * plusOrMinus;
+                }
+
+                // Create a bouncing system
+                // X-axis
+                if (x[i] < 0) {
+                    x[i] = Math.abs(x[i]);
+                } else if (x[i] > b) {
+                    x[i] = 2 * b - x[i];
+                }
+
+                // Y-axis
+                if (y[i] < 0) {
+                    y[i] = Math.abs(x[i]);
+                } else if (y[i] > b) {
+                    y[i] = 2 * b - y[i];
+                }
+                // End movement
+            }
+
+            // Start spreading
+            for (var i = 0; i < nPop; i++) {
+                for (var k = 0; k < nPop; k++) {
+                    var d = Math.sqrt((x[i] - x[k]) * (x[i] - x[k]) + (y[i] - y[k]) * (y[i] - y[k]));
+
+                    if (d < minDis) {
+                        if (ifc[k] == 1) {
+                            if (im[i] == 0) {
+                                ifc[i] = 1;
+                            }
+                        }
+                    }
+                }
+                // End spreading
+            }
+
+            // Start live or die
+            for (var i = 0; i < nPop; i++) {
+                if (ifc[i] == 1) {
+                    if (Math.random() < mortRate) {
+
+                        mr[i] = 1;
+                        ifc[i] = 2;
+                        im[i] = 0;
+                    }
+                }
+
+                if (ifc[i] == 1) {
+                    t[i] = t[i] + 1;
+                }
+
+                if (t[i] > sickDur) {
+                    t[i] = 0;
+                    ifc[i] = 0;
+                    im[i] = 1;
+                }
+                // End live or die   
+            }
+
+            // Find number of active infected people
+            var count = 0;
+            for (var i = 0; i < nPop; ++i) {
+                if (ifc[i] == 1)
+                    count++;
+            }
+            nOfInfected[j] = count;
+
+            // Find number of died people
+            var count = 0;
+            for (var i = 0; i < nPop; ++i) {
+                if (mr[i] == 1)
+                    count++;
+            }
+            nOfDied[j] = count;
+
+            // Animation variables   
+            xSave.push(x);
+            ySave.push(y);
+
+
+            // End of main loop
+        }
+
+        plot(simSpan, nOfInfected, nOfDied);
+
+    }
+
+    myFun();
+
+    //***************
+    // Plot Function
+    //***************
+    function plot(simSpan, nOfInfected, nOfDied) {
+        var Patient = {
+            x: simSpan,
+            y: nOfInfected,
+            type: 'scatter',
+            name: 'Active Patients'
+        };
+
+        var Died = {
+            x: simSpan,
+            y: nOfDied,
+            type: 'scatter',
+            name: 'Died'
+        };
+
+        var data = [Patient, Died];
+
+        var layout = {
+            showlegend: true,
+            legend: {
+                x: 1,
+                xanchor: 'right',
+                y: 1
+            },
+            title: 'Cases',
+            font: {
+                size: 16
+            },
+
+        };
+
+        var config = {
+            responsive: true
+        }
+
+        Plotly.newPlot('myDiv', data, layout, config);
+    }
+    </script>
+</body>
+
+</html>
